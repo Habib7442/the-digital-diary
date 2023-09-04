@@ -56,7 +56,7 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <div className="app">
+    <div className="app bg-gray-700">
       <div className="container">
         <Suspense
           fallback={

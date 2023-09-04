@@ -8,7 +8,6 @@ import Tilt from "react-parallax-tilt";
 
 const New = () => {
   const [data, setData] = useState([]);
-  const [id, setId] = useState([]);
   const location = useLocation();
 
   useEffect(() => {
@@ -18,14 +17,12 @@ const New = () => {
         const q = query(collection(db, "posts"), where("cat", "==", cat));
         const querySnapshot = await getDocs(q);
         let tempData = [];
-        let id = [];
         querySnapshot.forEach((doc) => {
-          tempData.push(doc.data());
-          // setId(doc.id);
-          id.push(doc.id);
+          const postData = doc.data();
+          postData.id = doc.id;
+          tempData.push(postData);
         });
         setData(tempData);
-        setId(id);
       } catch (error) {
         console.log(error.response.message);
       }
@@ -33,13 +30,11 @@ const New = () => {
     getPost();
   }, [location.search]);
 
-
-  console.log(data);
   return (
     <Stack className="home">
       <div className="posts">
         {data.map((post, index) => (
-          <div className="post" key={post?.id}>
+          <div className="post" key={index}>
             <Tilt>
               <div className="img" data-aos="flip-left">
                 <img className="postImg" src={post?.img} alt="" data-tilt />
@@ -56,7 +51,7 @@ const New = () => {
               >
                 {parse(post?.desc.slice(0, 300))}
               </Typography>
-              <Link className="link" to={`/post/${id[0]}`}>
+              <Link className="link" to={`/post/${post.id}`}>
                 <Button color="secondary">Read more</Button>
               </Link>
             </div>
